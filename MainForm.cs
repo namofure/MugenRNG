@@ -3,15 +3,20 @@ using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace MugenRNG
 {
     public partial class MainForm :Form
     {
-        MugenFloor Generate;
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool AllocConsole();
+
+
         public MainForm()
         {
             InitializeComponent();
+            AllocConsole();
         }
 
 
@@ -19,17 +24,20 @@ namespace MugenRNG
         {
             ulong Seed = 0x4B079738;
 
-            Generate = new MugenFloor();
-            Generate.Generate(Seed);
+            MugenFloor Floor = new MugenFloor();
+            Seed = Floor.GenerateFloor(Seed);
 
-
+            MugenRoomB Room = new MugenRoomB();
+            Room.GenerateRoomB(Floor, Seed);
 
             Mapping Mapper = new Mapping();
 
-            pictureBox1.Image = Mapper.Drawing(Generate, 0);
-            pictureBox2.Image = Mapper.Drawing(Generate, 1);
-            pictureBox3.Image = Mapper.Drawing(Generate, 2);
-            pictureBox4.Image = Mapper.Drawing(Generate, 3);
+            pictureBox1.Image = Mapper.Drawing(Floor, 0);
+            pictureBox2.Image = Mapper.Drawing(Floor, 1);
+            pictureBox3.Image = Mapper.Drawing(Floor, 2);
+            pictureBox4.Image = Mapper.Drawing(Floor, 3);
+
+
         }
     }
 }

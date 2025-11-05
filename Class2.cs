@@ -22,27 +22,21 @@ namespace MugenRNG
                     for (int x = 0; x < 4; x++)
                     {
                         Room R = floor.Rooms[y, x, z];
-                        DrawRoom(g, x, y, z, R);
+                        byte Val = floor.Rooms[y, x, z].RoomID;
+                        DrawFloor(g, x, y, z, R);
+                        DrawRoom(g, x, y, z, Val);
                     }
                 }
-
             }
             return bmp;
         }
 
-        public void DrawRoom(Graphics g, int x, int y, int z, Room R)
+        public void DrawFloor(Graphics g, int x, int y, int z, Room R)
         {
-            //(00)(01)(02)(03)
-            //(10)(11)(12)(13)
-
-            //(1)
-            //(1)(9)(1)(9)(1)(9)(1)(9)(1)
-            int BaseX = x * (FloorSize + 1) + 1;//各フロアの(0,0)
+            int BaseX = x * (FloorSize + 1) + 1;//各フロアの(10,10)
             int BaseY = y * (FloorSize + 1) + 1;
 
             Color color = Color.White;
-            if (x == 0 && y == 0) color = Color.Blue;
-            if (R.Boss) color = Color.Red;
 
             using (Brush b = new SolidBrush(color))
             {
@@ -99,6 +93,97 @@ namespace MugenRNG
                         10
                     );
                     if (Flag == true) g.FillRectangle(b, pathRect);
+                }
+            }
+        }
+        public void DrawRoom(Graphics g, int x, int y, int z, byte Val)
+        {
+            if (Val == 0x13 || Val == 0xFF) return; //空
+
+            int BaseX = x * (FloorSize + 1) + 1;    //各フロアの(0,0)
+            int BaseY = y * (FloorSize + 1) + 1;
+
+            if (Val == 0x01) //ボス部屋
+            {
+                using (Brush grayBrush = new SolidBrush(Color.Black))
+                {
+                    Rectangle All = new Rectangle(BaseX * CellSize, BaseY * CellSize, 90, 90);
+                    g.FillRectangle(grayBrush, All);
+                }
+                using (Brush grayBrush = new SolidBrush(Color.Red))
+                {
+                    Rectangle Top = new Rectangle((BaseX + 1) * CellSize, (BaseY + 1) * CellSize, 70, 60);
+                    g.FillRectangle(grayBrush, Top);
+
+                    Rectangle Bottom = new Rectangle((BaseX + 3) * CellSize, (BaseY + 7) * CellSize, 30, 20);
+                    g.FillRectangle(grayBrush, Bottom);
+                }
+                return;
+            }
+
+            using (Brush grayBrush = new SolidBrush(Color.Black))
+            {
+                Rectangle TopLeft = new Rectangle(BaseX * CellSize, BaseY * CellSize, 30, 30); //左上
+                g.FillRectangle(grayBrush, TopLeft);
+
+                Rectangle TopRight = new Rectangle((BaseX + 6) * CellSize, BaseY * CellSize, 30, 30); //右上
+                g.FillRectangle(grayBrush, TopRight);
+
+                Rectangle BottomLeft = new Rectangle(BaseX * CellSize, (BaseY + 6) * CellSize, 30, 30); //左下 
+                g.FillRectangle(grayBrush, BottomLeft);
+
+                Rectangle BottomRight = new Rectangle((BaseX + 6) * CellSize, (BaseY + 6) * CellSize, 30, 30); //右下
+                g.FillRectangle(grayBrush, BottomRight);
+            }
+
+            using (Brush grayBrush = new SolidBrush(Color.White))
+            {
+                Rectangle Center = new Rectangle((BaseX + 1) * CellSize, (BaseY + 1) * CellSize, 70, 70); //中心
+                g.FillRectangle(grayBrush, Center);
+            }
+
+            if (Val == 0x0F) //フラッシュ部屋
+            {
+                int PathX = (BaseX + 4) * CellSize;
+                int PathY = (BaseY + 4) * CellSize;
+
+                using (Brush grayBrush = new SolidBrush(Color.Black))
+                {
+                    Rectangle Top = new Rectangle(PathX, PathY + 20, 10, 10);
+                    g.FillRectangle(grayBrush, Top);
+
+                    Rectangle Bottom = new Rectangle(PathX, PathY - 20, 10, 10);
+                    g.FillRectangle(grayBrush, Bottom);
+
+                    Rectangle Right = new Rectangle(PathX + 20, PathY, 10, 10);
+                    g.FillRectangle(grayBrush, Right);
+
+                    Rectangle Left = new Rectangle(PathX - 20, PathY, 10, 10);
+                    g.FillRectangle(grayBrush, Left);
+                }
+            }
+
+            if (Val == 0x10)
+            {
+                using (Brush grayBrush = new SolidBrush(Color.Black))
+                {
+                    Rectangle TopLeft = new Rectangle((BaseX + 1) * CellSize, (BaseY + 1) * CellSize, 30, 30); //左上
+                    g.FillRectangle(grayBrush, TopLeft);
+
+                    Rectangle TopRight = new Rectangle((BaseX + 5) * CellSize, (BaseY + 1) * CellSize, 30, 30); //右上
+                    g.FillRectangle(grayBrush, TopRight);
+
+                    Rectangle BottomLeft = new Rectangle((BaseX + 1) * CellSize, (BaseY + 5) * CellSize, 30, 30); //左下 
+                    g.FillRectangle(grayBrush, BottomLeft);
+
+                    Rectangle BottomRight = new Rectangle((BaseX + 5) * CellSize, (BaseY + 5) * CellSize, 30, 30); //右下
+                    g.FillRectangle(grayBrush, BottomRight);
+                }
+
+                using (Brush grayBrush = new SolidBrush(Color.White))
+                {
+                    Rectangle Center = new Rectangle((BaseX + 3) * CellSize, (BaseY + 3) * CellSize, 30, 30); //中心
+                    g.FillRectangle(grayBrush, Center);
                 }
             }
         }

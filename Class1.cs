@@ -24,7 +24,7 @@ namespace MugenRNG
                         Rooms[y, x, z] = new Room();
         }
 
-        public ulong Generate(ulong Seed)
+        public ulong GenerateFloor(ulong Seed)
         {
             Seed = NextSeed(Seed);
 
@@ -216,6 +216,7 @@ namespace MugenRNG
                 log.AppendLine($"");
             }
 
+            //----------------------------------------------------------
             log.AppendLine($"=== Floor 1 ===");
 
             for (int y = 0; y < 4; y++)
@@ -230,6 +231,8 @@ namespace MugenRNG
                 }
                 log.AppendLine("");
             }
+
+            //------------------------------------------------------------
 
             File.WriteAllText("DebugLog.txt", log.ToString());
             return Seed;
@@ -297,11 +300,15 @@ namespace MugenRNG
 
     }
 
+
+
     public class Room
     {
         public bool FirstRound;
         public bool Visited;
         public bool Boss;
         public bool North, South, East, West;
+        public byte RoomID; //部屋ID
+        public int Val; //配置トレーナー数
     }
 }
