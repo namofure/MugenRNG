@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             button1 = new Button();
             panel1 = new Panel();
             textBox1 = new TextBox();
@@ -71,7 +72,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(85, 37);
+            button1.Location = new Point(50, 18);
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
             button1.TabIndex = 0;
@@ -85,9 +86,9 @@
             panel1.Controls.Add(comboBox1);
             panel1.Controls.Add(tabControl1);
             panel1.Controls.Add(button1);
-            panel1.Location = new Point(12, 12);
+            panel1.Location = new Point(5, 3);
             panel1.Name = "panel1";
-            panel1.Size = new Size(680, 553);
+            panel1.Size = new Size(680, 513);
             panel1.TabIndex = 1;
             // 
             // textBox1
@@ -96,7 +97,7 @@
             textBox1.BackColor = SystemColors.Window;
             textBox1.BorderStyle = BorderStyle.FixedSingle;
             textBox1.ImeMode = ImeMode.Disable;
-            textBox1.Location = new Point(223, 37);
+            textBox1.Location = new Point(174, 20);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(143, 27);
             textBox1.TabIndex = 4;
@@ -108,7 +109,7 @@
             comboBox1.ImeMode = ImeMode.Disable;
             comboBox1.IntegralHeight = false;
             comboBox1.Items.AddRange(new object[] { "黒の摩天楼", "白の樹洞" });
-            comboBox1.Location = new Point(409, 38);
+            comboBox1.Location = new Point(342, 20);
             comboBox1.MaxDropDownItems = 2;
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(151, 28);
@@ -121,7 +122,7 @@
             tabControl1.Controls.Add(tabPage2);
             tabControl1.Controls.Add(tabPage3);
             tabControl1.Controls.Add(tabPage4);
-            tabControl1.Location = new Point(3, 85);
+            tabControl1.Location = new Point(5, 53);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
             tabControl1.Size = new Size(672, 457);
@@ -143,16 +144,24 @@
             // 
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AllowUserToDeleteRows = false;
+            dataGridView1.AllowUserToResizeColumns = false;
             dataGridView1.AllowUserToResizeRows = false;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView1.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.ColumnHeadersVisible = false;
             dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Column1, Column2 });
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Window;
+            dataGridViewCellStyle1.Font = new Font("Yu Gothic UI", 9F);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
             dataGridView1.Location = new Point(422, 6);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.ReadOnly = true;
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.Size = new Size(238, 410);
@@ -358,10 +367,10 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(697, 570);
+            ClientSize = new Size(697, 516);
             Controls.Add(panel1);
             Name = "MainForm";
-            Text = "MainForm";
+            Text = "MugenRNG";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             tabControl1.ResumeLayout(false);

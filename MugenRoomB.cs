@@ -36,10 +36,7 @@ namespace MugenRNG
                     if (z == 0 && i == 0);
                     else Seed = NextSeed(Seed);
 
-                    ulong swapIndex = (((Seed >> 32) * 0xF) >> 32);
-
-                    byte val_i = data[i];
-                    byte val_swap = data[swapIndex];
+                    ulong swapIndex = (((Seed >> 32) * 15) >> 32);
 
                     byte tmp = data[i];
                     data[i] = data[swapIndex];
