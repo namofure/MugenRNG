@@ -13,7 +13,7 @@
 初期SEED検索はドベカンまでに実装予定です.
 
 ## 動作環境
-.NET Desktop Runtime 8.0
+Microsoft .NET Runtime 8.0
 
 ## バージョン情報
 - v1.0.0 初版
