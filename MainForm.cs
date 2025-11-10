@@ -17,7 +17,7 @@ namespace MugenRNG
         public MainForm()
         {
             InitializeComponent();
-            AllocConsole();
+            //AllocConsole();
         }
 
 
@@ -40,10 +40,6 @@ namespace MugenRNG
             {
                 MessageBox.Show($"‰ŠúSEED‚ª•s³‚Å‚·I");
             }
-            Console.WriteLine($"Seed1:{Seed1:X8}, Seed2:{Seed2:X8}, InSeed:{InSeed:X16}, Seed:{Seed:X8}");
-
-            //Seed2 = 0xdf4d7c9d;
-            Seed2 = 0x543d8421;
 
             if (comboBox1.SelectedIndex == 0) //•‚Ì–€“V˜O
             {

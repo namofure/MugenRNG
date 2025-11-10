@@ -30,13 +30,11 @@ namespace MugenRNG
 
             ulong High32 = Seed >> 32;
             int BossFloor = (int)((High32 * 4) >> 32);
-            log.AppendLine($"[Boss Floor] Seed = {High32:X8} → Rnad={BossFloor}");
 
             Seed = NextSeed(Seed);
 
             High32 = Seed >> 32;
             int BossRand = (int)(((High32 * 11) >> 32));
-            log.AppendLine($"[Boss Room] Seed = {High32:X8} → Rand = {BossRand}");
 
             (int Y, int X)[] BossTable = new (int, int)[]
             {
@@ -47,8 +45,6 @@ namespace MugenRNG
 
             Boss = (BossTable[BossRand].Y, BossTable[BossRand].X, BossFloor);
             Rooms[Boss.Y, Boss.X, BossFloor].Boss = true;
-            log.AppendLine($"[Boss Room] Seed = {High32:X8} → Rand = {BossRand} → ({Boss.Y},{Boss.X})");
-            Console.WriteLine($"[Boss Room] Seed = {High32:X8} → Rand = {BossRand} → ({Boss.Y},{Boss.X})");
 
             Seed = NextSeed(Seed);
 
@@ -66,21 +62,18 @@ namespace MugenRNG
                     StepCount = 14;
                 }
 
-                log.AppendLine($"{z + 1}階層");
                 for (int Step = 0; Step < StepCount;)
                 { 
                     Rooms[y, x, z].Visited = true;
                     var FirstRound = true;
 
                     var dirs = GetAvailableDirs(y, x, z, FirstRound);
-                    log.AppendLine($"\n[Step {Step}] Current=({y},{x})  AvailableDirs=[{string.Join(",", dirs)}]");
 
                     if (dirs.Count == 0)
                     {
                         if (stack.Count > 0)
                         {
                             (y, x) = stack.Pop();
-                            log.AppendLine($"→ Dead end, backtrack to ({y},{x})");
                             continue;
                         }
                         else break;
@@ -88,8 +81,6 @@ namespace MugenRNG
 
                     High32 = Seed >> 32;
                     int RandVal = (int)((High32 * (ulong)dirs.Count) >> 32);
-                    log.AppendLine($"Seed = {High32:X8}  RandVal={RandVal}  dirs.Count={dirs.Count}");
-                    log.AppendLine($"Seed = {High32:X8}  RandVal = {RandVal}  ({y},{x})");
 
                     Seed = NextSeed(Seed);
 
@@ -110,15 +101,11 @@ namespace MugenRNG
 
                     LinkRooms(y, x, z, chosenDir);
 
-                    log.AppendLine($"[Link] dir={DirToStr(chosenDir)}");
-
                     stack.Push((y, x));
-                    log.AppendLine($"→ Move to ({ny},{nx}) dir={DirToStr(chosenDir)}");
 
                     x = nx; y = ny;
                     Step++;
                 }
-                log.AppendLine($"");
                 x = 1; y = 0;
 
                 //----------------------------------------------------------
@@ -138,14 +125,12 @@ namespace MugenRNG
 
                     var FirstRound = false;
                     var dirs = GetAvailableDirs(y, x, z, FirstRound);
-                    log.AppendLine($"\n[Step {Step}] Current=({y},{x})  AvailableDirs=[{string.Join(",", dirs)}]");
 
                     if (dirs.Count == 0)
                     {
                         if (stack.Count > 0)
                         {
                             (y, x) = stack.Pop();
-                            log.AppendLine($"→ Dead end, backtrack to ({y},{x})");
                             continue;
                         }
                         else break;
@@ -153,8 +138,6 @@ namespace MugenRNG
 
                     High32 = Seed >> 32;
                     int RandVal = (int)((High32 * (ulong)dirs.Count) >> 32);
-                    log.AppendLine($"Seed = {High32:X8}  RandVal={RandVal}  dirs.Count={dirs.Count}");
-                    log.AppendLine($"Seed = {High32:X8}  RandVal = {RandVal}  ({y},{x})");
 
                     Seed = NextSeed(Seed);
 
@@ -177,17 +160,6 @@ namespace MugenRNG
 
                     LinkRooms(y, x, z, chosenDir);
 
-                    // フラグ確認出力
-                    Room r = Rooms[y, x, z];
-                    string flagNow = $"({y},{x}) N:{(r.North ? 1 : 0)} S:{(r.South ? 1 : 0)} E:{(r.East ? 1 : 0)} W:{(r.West ? 1 : 0)}";
-                    log.AppendLine($"[Link] dir={DirToStr(chosenDir)}");
-                    log.AppendLine($"  Current {flagNow}");
-
-
-                    log.AppendLine($"→ Move to ({ny},{nx}) dir={DirToStr(chosenDir)}");
-
-
-
                     if (x == 3 && y == 3) break;
 
                     x++;
@@ -199,11 +171,7 @@ namespace MugenRNG
 
                     Step++;
                 }
-                log.AppendLine($"");
             }
-
-            File.WriteAllText("DebugLog.txt", log.ToString());
-            Console.WriteLine($"Seed:{Seed:X8}");
             return (Seed, BossFloor);
         }
 

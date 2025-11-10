@@ -111,19 +111,6 @@ namespace MugenRNG
                 }
                 ValTotal[z] = FloorVal;
 
-                Console.WriteLine("=== Room IDs ===");
-
-                Console.WriteLine($"Z={z}");
-                for (int y = 0; y < 4; y++)
-                {
-                    for (int x = 0; x < 4; x++)
-                    {
-                        var id = floor.Rooms[y, x, z].RoomID;
-                        Console.Write($"{id:X2} ");
-                    }
-                    Console.WriteLine();
-                }
-
             }
             return ValTotal;
         }

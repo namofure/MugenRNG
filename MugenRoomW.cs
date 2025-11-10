@@ -53,7 +53,6 @@ namespace MugenRNG
                     Seed = NextSeed(Seed);
                     ulong Rand = ((Seed >> 32) * 4) >> 32;
                     tempID = tempIDs[z, Rand];
-                    Console.WriteLine($"Rand:{Rand},temp:{tempID:X2}");
                 }
 
                 int index = 0;

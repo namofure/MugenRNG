@@ -83,8 +83,6 @@ namespace MugenRNG
             Seed1 = NextSeed(Seed1);
             int GateTrainerRand = (int)(((Seed1 >> 32) * 21) >> 32) + 1;
 
-            Console.WriteLine($"GateTrainer:{GateTrainerFloor},{GateTrainerRand}");
-
             //ドクター生成を追加
             return (TIDs, GateTrainerFloor, GateTrainerRand);
         }
