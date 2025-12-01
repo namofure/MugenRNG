@@ -24,16 +24,16 @@ namespace MugenRNG
                         Rooms[y, x, z] = new Room();
         }
 
-        public (ulong, int) GenerateFloor(ulong Seed)
+        public (ulong, int) GenerateFloor(ulong Seed2)
         {
-            Seed = NextSeed(Seed);
+            Seed2 = NextSeed(Seed2);
 
-            ulong High32 = Seed >> 32;
+            ulong High32 = Seed2 >> 32;
             int BossFloor = (int)((High32 * 4) >> 32);
 
-            Seed = NextSeed(Seed);
+            Seed2 = NextSeed(Seed2);
 
-            High32 = Seed >> 32;
+            High32 = Seed2 >> 32;
             int BossRand = (int)(((High32 * 11) >> 32));
 
             (int Y, int X)[] BossTable = new (int, int)[]
@@ -46,7 +46,7 @@ namespace MugenRNG
             Boss = (BossTable[BossRand].Y, BossTable[BossRand].X, BossFloor);
             Rooms[Boss.Y, Boss.X, BossFloor].Boss = true;
 
-            Seed = NextSeed(Seed);
+            Seed2 = NextSeed(Seed2);
 
             // 通路生成
             Stack<(int Y, int X)> stack = new Stack<(int Y, int X)>();
@@ -79,10 +79,10 @@ namespace MugenRNG
                         else break;
                     }
 
-                    High32 = Seed >> 32;
+                    High32 = Seed2 >> 32;
                     int RandVal = (int)((High32 * (ulong)dirs.Count) >> 32);
 
-                    Seed = NextSeed(Seed);
+                    Seed2 = NextSeed(Seed2);
 
                     int dirIndex = 0;
                     int chosenDir = 0;
@@ -136,10 +136,10 @@ namespace MugenRNG
                         else break;
                     }
 
-                    High32 = Seed >> 32;
+                    High32 = Seed2 >> 32;
                     int RandVal = (int)((High32 * (ulong)dirs.Count) >> 32);
 
-                    Seed = NextSeed(Seed);
+                    Seed2 = NextSeed(Seed2);
 
                     int dirIndex = 0;
                     int chosenDir = 0;
@@ -172,7 +172,7 @@ namespace MugenRNG
                     Step++;
                 }
             }
-            return (Seed, BossFloor);
+            return (Seed2, BossFloor);
         }
 
         static string DirToStr(int dir) => dir switch
@@ -230,9 +230,9 @@ namespace MugenRNG
             if (chosenDir == 3) r1.North = true; // 3: Up
         }
 
-        public ulong NextSeed(ulong Seed)
+        public ulong NextSeed(ulong Seed2)
         {
-            return Seed * 0x5D588B656C078965UL + 0x269EC3UL;
+            return Seed2 * 0x5D588B656C078965UL + 0x269EC3UL;
         }
 
     }

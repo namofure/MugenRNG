@@ -5,7 +5,7 @@ namespace MugenRNG
 {
     public class MugenRoomB
     {
-        public  int[]  GenerateRoomB(MugenFloor floor, ulong Seed , ushort[,] TIDs, int GateFloor, int GateRand, int BossFloor)
+        public  (int[] ValTotal, uint GateTrainerVal)  GenerateRoomB(MugenFloor floor, ulong Seed2 , ushort[,] TIDs, int GateFloor, uint GateRand, int BossFloor)
         {
             byte [,] RoomIDs =
             {
@@ -16,6 +16,10 @@ namespace MugenRNG
             };
 
             int[] ValTotal = new int[4];
+            List<int> TIDRoom = new List<int>();
+            List<int> TIDVal = new List<int>();
+            uint GateTrainerRand = 0;
+            uint GateTrainerVal = 0;
 
             byte[,] tempIDs =
             {
@@ -27,16 +31,17 @@ namespace MugenRNG
 
             for (int z = 0; z < 4; z++)
             {
+
                 byte[] data = new byte[16];
                 for (int i = 0; i < 16; i++)
                     data[i] = RoomIDs[z, i];
-
+                Console.WriteLine($"Rand1:{Seed2:X16}");
                 for (int i = 0; i < 15; i++)
                 {
-                    if (z == 0 && i == 0);
-                    else Seed = NextSeed(Seed);
+                    if (z == 0 && i == 0) ;
+                    else Seed2 = NextSeed(Seed2);
 
-                    ulong swapIndex = (((Seed >> 32) * 15) >> 32);
+                    ulong swapIndex = (((Seed2 >> 32) * 15) >> 32);
 
                     byte tmp = data[i];
                     data[i] = data[swapIndex];
@@ -47,14 +52,16 @@ namespace MugenRNG
 
                 if (z == BossFloor) //ボス部屋の下
                 {
-                    Seed = NextSeed(Seed);
-                    ulong Rand = ((Seed >> 32 ) * 4 ) >> 32;
+                    Seed2 = NextSeed(Seed2);
+                    ulong Rand = ((Seed2 >> 32 ) * 4 ) >> 32;
                     tempID = tempIDs[z, Rand];
-                }             
+                }
 
-                int index = 0;
+                uint index = 0;
                 int TIDindex = 0;
                 int FloorVal = 0;
+                int tempIndex = 0;
+                int tempVal = -1;
 
                 for (int y = 0; y < 4; y++)
                 {
@@ -67,27 +74,54 @@ namespace MugenRNG
 
                             floor.Rooms[y + 1, x, z].RoomID = tempID;
                             floor.Rooms[y + 1, x, z].Skip = true;
+                            tempIndex++;
                             continue;
                         }
-                        if (floor.Rooms[y, x, z].Skip == true) continue;
-
-                        if (x == 0 && y == 0)
+                        if (floor.Rooms[y, x, z].Skip)
                         {
-                            floor.Rooms[y, x, z].RoomID = 0xFF;
-                            floor.Rooms[y, x, z].Val = 0;
-                            continue;
-                        }
-                        else
-                        {
-                            floor.Rooms[y, x, z].RoomID = data[index];
-
-                            byte n = data[index];
+                            byte n = tempID;
                             if (n == 0x13) floor.Rooms[y, x, z].Val = 0;
                             else if (n == 0x01 || n == 0x7 || n == 0x9 || n == 0xB) floor.Rooms[y, x, z].Val = 2;
                             else if (n == 0x02 || n == 0xC || n == 0xD || n == 0xE) floor.Rooms[y, x, z].Val = 3;
                             else floor.Rooms[y, x, z].Val = 1;
+                        }
+                        if (x == 0 && y == 0)
+                        {
+                            floor.Rooms[y, x, z].RoomID = 0xFF;
+                            floor.Rooms[y, x, z].Val = 0;
+                            tempIndex++;
+                            continue;
+                        }
+                        else
+                        {
+                            if (!floor.Rooms[y, x, z].Skip)
+                            {
+                                floor.Rooms[y, x, z].RoomID = data[index];
 
-                            index++;
+                                byte n = data[index];
+                                if (n == 0x13) floor.Rooms[y, x, z].Val = 0;
+                                else if (n == 0x01 || n == 0x7 || n == 0x9 || n == 0xB) floor.Rooms[y, x, z].Val = 2;
+                                else if (n == 0x02 || n == 0xC || n == 0xD || n == 0xE) floor.Rooms[y, x, z].Val = 3;
+                                else floor.Rooms[y, x, z].Val = 1;
+
+                                if (0x1 < data[index] && data[index] < 0xF && z == GateFloor)
+                                {
+                                    for (int i = 0; i < floor.Rooms[y, x, z].Val; i++)
+                                    {
+                                        TIDRoom.Add(tempIndex);
+                                    }
+
+                                    for (int i = floor.Rooms[y, x, z].Val; i > 0; i--)
+                                    {
+                                        TIDVal.Add(tempVal + i);
+                                    }
+                                }
+                                tempVal += floor.Rooms[y, x, z].Val;
+                            }
+                            else tempVal += floor.Rooms[y, x, z].Val;
+
+                            tempIndex++;
+                            if (!floor.Rooms[y, x, z].Skip) index++;
                         }
 
                         FloorVal += floor.Rooms[y, x, z].Val;
@@ -96,25 +130,39 @@ namespace MugenRNG
                         {
                             ushort TID = TIDs[z,TIDindex];
                             floor.Rooms[y, x, z].Trainer.Add(TID);
-
-                            if(z == GateFloor)
-                            {
-                                if (TIDindex == GateRand) floor.Rooms[y, x, z].GateTrainer = true;
-                            }
-                            
                             TIDindex++;
+                        }                      
+                    }
+                }
+
+                if (z == GateFloor)
+                {
+                    int Rooms = 0;
+                    for (int y = 0; y < 4; y++)
+                    {
+                        for (int x = 0; x < 4; x++)
+                        {
+                            ulong temp = (ulong)GateRand * (ulong)(TIDRoom.Count);
+
+                            GateTrainerRand = (uint)TIDRoom[(int)(temp >> 32)];
+
+                            if (Rooms == GateTrainerRand)
+                            {
+                                floor.Rooms[y, x, z].GateTrainer = true;
+                                GateTrainerVal = (uint)TIDVal[(int)(temp >> 32)];
+                            }
+                            Rooms++;                            
                         }
                     }
                 }
                 ValTotal[z] = FloorVal;
-
             }
-            return ValTotal;
+            return (ValTotal, GateTrainerVal);
         }
 
-        private ulong NextSeed(ulong Seed)
+        private ulong NextSeed(ulong Seed2)
         {
-            return Seed * 0x5D588B656C078965UL + 0x269EC3UL;
+            return Seed2 * 0x5D588B656C078965UL + 0x269EC3UL;
         }
     }
 }

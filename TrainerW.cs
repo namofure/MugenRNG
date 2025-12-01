@@ -10,7 +10,7 @@ namespace MugenRNG
 {
     internal class TrainerW
     {
-        public (ushort[,] TIDs, int GateTrainerFloor, int GateTrainerRand) GenerateTrainerW(ulong Seed1)
+        public (ushort[,] TIDs, int GateTrainerFloor, uint GateTrainerRand) GenerateTrainerW(ulong Seed1)
         {
             ushort[,] TrainerIDs =
                 {
@@ -81,7 +81,8 @@ namespace MugenRNG
             int GateTrainerFloor = (int)(((Seed1 >> 32) * 4) >> 32);
 
             Seed1 = NextSeed(Seed1);
-            int GateTrainerRand = (int)(((Seed1 >> 32) * 21) >> 32) + 1;
+            uint GateTrainerRand = (uint)(Seed1 >> 32);
+
 
             //ドクター生成を追加
             return (TIDs, GateTrainerFloor, GateTrainerRand);

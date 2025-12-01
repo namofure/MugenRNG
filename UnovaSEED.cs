@@ -45,7 +45,7 @@ namespace MugenRNG
             }
             //--------------------------------------------------------------------------------------
         }
-        public (ulong, ulong) UnovaRNG()
+        public (ulong, ulong, ulong) UnovaRNG()
         {
             ulong val;
             ulong temp1, temp2, temp3;
@@ -58,16 +58,19 @@ namespace MugenRNG
             temp3 = ((temp2 << 0xF) & 0xEFC60000) ^ temp2;
             MTSeed = ((temp3 >> 0x12) ^ temp3);
 
-            ulong Seed1 = NextSeed(MTSeed);
-            ulong Seed2 = NextSeed(Seed1) >> 32;
-            Seed1 =  Seed1 >> 32;
+            if (MTSeed > 0x7FFFFFFF) MTSeed = 0xFFFFFFFF00000000 + MTSeed;
 
-            return (Seed1, Seed2);
+            ulong Seed = NextSeed(MTSeed);
+            ulong Seed2 = (NextSeed(Seed) >> 32);
+            ulong Seed1 =  (Seed >> 32);
+            ulong temp = NextSeed(Seed);
+
+            return (MTSeed, Seed1, Seed2);
 
         }
         private ulong NextSeed(ulong Seed)
         {
-            return Seed * 0x5D588B656C078965UL + 0x269EC3UL;
+            return Seed * 0x5D588B656C078965U + 0x269EC3U;
         }
     } 
 }

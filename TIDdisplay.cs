@@ -6,7 +6,7 @@ namespace MugenRNG
 {
     internal class TIDdisplay
     {
-        public void Display(DataGridView dgv, ushort[,] TIDs, int z, int[] ValTotal, int GateFloor, int GateRand)
+        public void Display(DataGridView dgv, ushort[,] TIDs, int z, int[] ValTotal, int GateFloor, uint GateTrainerRand)
         {
             dgv.Rows.Clear();
             dgv.Columns.Clear();
@@ -23,7 +23,7 @@ namespace MugenRNG
 
                 int rowIndex = dgv.Rows.Add(IDhex, name);
 
-                if (z == GateFloor && i == GateRand)
+                if (z == GateFloor && i == GateTrainerRand)
                 {
                     dgv.Rows[rowIndex].Cells[0].Style.BackColor = Color.Yellow;
                     dgv.Rows[rowIndex].Cells[1].Style.BackColor = Color.Yellow;
@@ -32,7 +32,6 @@ namespace MugenRNG
 
             dgv.ResumeLayout();
         }
-
 
         private string TrainerName(ushort TID)
         {
