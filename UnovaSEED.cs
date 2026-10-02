@@ -44,12 +44,25 @@ namespace MugenRNG
                 if ((temp & 1) == 1) stateVector[N - 1] ^= MATRIX_A;
             }
             //--------------------------------------------------------------------------------------
+
         }
         public (ulong, ulong, ulong) UnovaRNG()
         {
             ulong val;
             ulong temp1, temp2, temp3;
             ulong MTSeed;
+
+            Console.WriteLine($"IVSeed：{stateVector[0]:X16}");
+            Console.WriteLine($"IVSeed：{stateVector[1]:X16}");
+            Console.WriteLine($"IVSeed：{stateVector[2]:X16}");
+            Console.WriteLine($"IVSeed：{stateVector[3]:X16}");
+            Console.WriteLine($"IVSeed：{stateVector[4]:X16}");
+            Console.WriteLine($"IVSeed：{stateVector[5]:X16}");
+            Console.WriteLine($"IVSeed：{stateVector[6]:X16}");
+            Console.WriteLine($"IVSeed：{stateVector[7]:X16}");
+            Console.WriteLine($"IVSeed：{stateVector[8]:X16}");
+            Console.WriteLine($"IVSeed：{stateVector[9]:X16}");
+            Console.WriteLine("----------------------");
 
             val = stateVector[2];
 
@@ -66,7 +79,6 @@ namespace MugenRNG
             ulong temp = NextSeed(Seed);
 
             return (MTSeed, Seed1, Seed2);
-
         }
         private ulong NextSeed(ulong Seed)
         {

@@ -37,6 +37,7 @@ namespace MugenRNG
                 MTSeed MTSeed = new MTSeed(Seed);
                 (temp, Seed1, Seed2) = MTSeed.UnovaRNG();
 
+                Console.WriteLine($"SeedÅF{Seed:X16}");
                 Console.WriteLine($"Seed1:{Seed1:X16}, Seed2:{Seed2:X16}");
 
 
